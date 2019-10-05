@@ -15,16 +15,14 @@ public class PlayerController : MonoBehaviour
     // private List<GameObject> bodySegments;
     private LinkedList<GameObject> bodySegments;
 
-    bool hasThrowPowerup = false;
+    bool hasThrowPowerup = true;
     float throwSpeed = 30.0f;
     float throwStartDist = 1.5f;
 
     // The first segment can only be thrown if it is close to the player
     float maxDistFromPlayerForThrow = 2.0f;
 
-
     float deathHeight = -20.0f;
-
 
     // Start is called before the first frame update
     void Start()
@@ -92,7 +90,6 @@ public class PlayerController : MonoBehaviour
 
 
     void Update() {
-
         if (transform.position.y < deathHeight) {
             Die();
         }
@@ -175,7 +172,6 @@ public class PlayerController : MonoBehaviour
         } else if (collider.CompareTag("EnemyWeapon")) {
             Die();
         }
-
     }
 
     private void EatSnakeBody(GameObject segment) {
@@ -194,7 +190,6 @@ public class PlayerController : MonoBehaviour
             EatSnakeBody(collision.gameObject);
 
         } else if (collision.gameObject.CompareTag("EnemyWeapon")) {
-            // SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             Die();
         }
     }
@@ -226,19 +221,9 @@ public class PlayerController : MonoBehaviour
                 curNode.Value.GetComponent<SnakeBodyController>().SetTarget(null);
                 bodySegments.Remove(curNode);
                 segmentFound = true; 
-
-            // } else {
-            //     if () {
-            //         // bodySegments.Remove(curNode);
-            //         curNode.Value.GetComponent<SnakeBodyController>().SetTarget(null);
-            //     }
             }
 
             curNode = nextNode;
         }
-
-        // if (segmentFound) {
-        //     Destroy(segment);
-        // }
     }
 }

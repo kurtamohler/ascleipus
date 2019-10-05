@@ -42,7 +42,6 @@ public class SnakeBodyController : MonoBehaviour
     }
 
     public void SetTarget(GameObject newTarget, bool weaponize = false) {
-        // meshRenderer.material = deactiveMaterial;
         if (newTarget != null) {
             GetComponent<MeshRenderer>().material = activeMaterial;
 
@@ -92,20 +91,10 @@ public class SnakeBodyController : MonoBehaviour
     }
 
     private void FollowTarget() {
-        // Vector3 displacement = new Vector3(
-        //     target.transform.position.x - transform.position.x,
-        //     0,
-        //     target.transform.position.z - transform.position.z
-        // );
-
         Vector3 displacement = target.transform.position - transform.position;
 
         if (displacement.magnitude > followDistance) {
             float speedMult = displacement.magnitude / followDistance;
-
-            // if (speedMult > 2.0f) {
-            //     speedMult = 2.0f;
-            // }
 
             float speed = target.GetComponent<Rigidbody>().velocity.magnitude * speedMult;
 
@@ -123,17 +112,9 @@ public class SnakeBodyController : MonoBehaviour
             rb.velocity *= 0.99f;
 
         }
-
-        // ApplyMaxSpeed();
     }
 
     private void FollowTargetOld() {
-        // Vector3 displacement = new Vector3(
-        //     target.transform.position.x - transform.position.x,
-        //     0,
-        //     target.transform.position.z - transform.position.z
-        // );
-
         Vector3 displacement = target.transform.position - transform.position;
 
         if (displacement.magnitude > followDistance) {
@@ -146,60 +127,22 @@ public class SnakeBodyController : MonoBehaviour
                 speed = minSpeed;
             }
 
-            // float speed = maxSpeed;
-
             rb.velocity = new Vector3(
                 displacement.normalized.x * speed,
                 rb.velocity.y,
                 displacement.normalized.z * speed
             );
 
-            // Vector3 force = displacement.normalized * followForce;
-
-            // rb.AddForce(force);
-
-
-            // rb.AddForce()
         } else {
             rb.velocity *= 0.99f;
-
-        }
-
-        // ApplyMaxSpeed();
-    }
-
-
-    void ApplyMaxSpeed() {
-        Vector3 horizVel = new Vector3(
-            rb.velocity.x,
-            0,
-            rb.velocity.z
-        );
-        float horizSpeed = horizVel.magnitude;
-
-        if (horizSpeed > maxSpeed) {
-            float fixFactor = maxSpeed / horizSpeed;
-
-            rb.velocity = new Vector3(
-                rb.velocity.x * fixFactor,
-                rb.velocity.y,
-                rb.velocity.z * fixFactor
-            );
         }
     }
-
 
     void OnTriggerEnter(Collider collider) {
         if (collider.CompareTag("EnemyWeapon")) {
             if (target) {
                 playerController.CutAtSegment(gameObject);
-
-            // } else {
-                // if (!weaponized) {
-                //     Destroy(gameObject);
-                // }
             }
-
         }
     }
 

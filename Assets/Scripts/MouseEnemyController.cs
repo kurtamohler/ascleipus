@@ -67,8 +67,6 @@ public class MouseEnemyController : MonoBehaviour
         return followingPlayer;
     }
 
-
     void HeadHome() {
-
     }
 }
