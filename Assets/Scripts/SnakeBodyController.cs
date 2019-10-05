@@ -194,28 +194,17 @@ public class SnakeBodyController : MonoBehaviour
             if (target) {
                 playerController.CutAtSegment(gameObject);
 
-            } else {
-                if (!weaponized) {
-                    Destroy(gameObject);
-                }
+            // } else {
+                // if (!weaponized) {
+                //     Destroy(gameObject);
+                // }
             }
 
         }
     }
 
     void OnCollisionEnter(Collision collision) {
-        if (collision.gameObject.CompareTag("EnemyWeapon")) {
-            // SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-
-            if (target) {
-                playerController.CutAtSegment(gameObject);
-
-            } else {
-                if (!weaponized) {
-                    Destroy(gameObject);
-                }
-            }
-        } else if (weaponized) {
+        if (weaponized) {
             if (collision.gameObject.CompareTag("SnakeBody")) {
 
                 SnakeBodyController otherSnakeBodyController = collision.gameObject.GetComponent<SnakeBodyController>();

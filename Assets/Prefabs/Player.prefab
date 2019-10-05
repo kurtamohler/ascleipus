@@ -103,7 +103,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6017079590730469631}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 20
   m_Drag: 0
   m_AngularDrag: 1
   m_UseGravity: 1
@@ -127,7 +127,6 @@ MonoBehaviour:
   maxSpeed: 10
   snakeBodyPrefab: {fileID: 6338043044793817928, guid: c18f262c62545cf85ad8c0d7bc0c2260,
     type: 3}
-  closestBodySegment: {fileID: 0}
 --- !u!1001 &6017079592365049436
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -195,7 +194,13 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1.5
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 23713854220347906, guid: daf02665c6297474d86f19d46f9eecc5,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: cbbf9d1b8f0b691f1903c8d367e5aaaf, type: 2}
+    m_RemovedComponents:
+    - {fileID: 95210331278890304, guid: daf02665c6297474d86f19d46f9eecc5, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: daf02665c6297474d86f19d46f9eecc5, type: 3}
 --- !u!4 &6020849627425511276 stripped
 Transform:

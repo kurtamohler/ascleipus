@@ -222,22 +222,23 @@ public class PlayerController : MonoBehaviour
         while (curNode != null) {
             LinkedListNode<GameObject> nextNode = curNode.Next;
 
-            if (segmentFound) {
+            if (segmentFound || GameObject.ReferenceEquals(segment, curNode.Value)) {
                 curNode.Value.GetComponent<SnakeBodyController>().SetTarget(null);
                 bodySegments.Remove(curNode);
+                segmentFound = true; 
 
-            } else {
-                if (GameObject.ReferenceEquals(segment, curNode.Value)) {
-                    bodySegments.Remove(curNode);
-                    segmentFound = true;
-                }
+            // } else {
+            //     if () {
+            //         // bodySegments.Remove(curNode);
+            //         curNode.Value.GetComponent<SnakeBodyController>().SetTarget(null);
+            //     }
             }
 
             curNode = nextNode;
         }
 
-        if (segmentFound) {
-            Destroy(segment);
-        }
+        // if (segmentFound) {
+        //     Destroy(segment);
+        // }
     }
 }

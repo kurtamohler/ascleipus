@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2079567579906874422}
   - component: {fileID: 2057781927380340778}
   - component: {fileID: 2057781927380340779}
+  - component: {fileID: -3194789840347561859}
   m_Layer: 0
   m_Name: CherryFoodPickup
   m_TagString: FoodPickup
@@ -29,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 2056124602140895356}
   m_LocalRotation: {x: -0.7069834, y: 0, z: 0, w: 0.7072302}
   m_LocalPosition: {x: 1.693, y: 1.104, z: 0}
-  m_LocalScale: {x: 60, y: 60, z: 60}
+  m_LocalScale: {x: 80, y: 80, z: 80}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -105,3 +106,16 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.008039717
   m_Center: {x: -0.00038395217, y: -0.00029923808, z: 0}
+--- !u!114 &-3194789840347561859
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2056124602140895356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0a0537e479c1642a8fd11549ec89d19, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 200
