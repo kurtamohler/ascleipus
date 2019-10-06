@@ -73,9 +73,9 @@ public class SnakeBodyController : MonoBehaviour
         if (transform.position.y <= deathHeight) {
             if (target) {
                 playerController.CutAtSegment(gameObject);
-            } else {
-                Destroy(gameObject);
             }
+
+            Destroy(gameObject);
         }
 
         if (weaponized) {

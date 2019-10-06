@@ -7,6 +7,9 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float speed;
     [SerializeField] private float maxSpeed;
+    [SerializeField] private float brakeAccel;
+
+    private float curMaxSpeed;
 
     private Rigidbody rb;
     private Vector3 curMoveDirection;
@@ -16,6 +19,7 @@ public class PlayerController : MonoBehaviour
     private LinkedList<GameObject> bodySegments;
 
     bool hasThrowPowerup = true;
+    bool hasBrakePowerup = true;
     float throwSpeed = 30.0f;
     float throwStartDist = 1.5f;
 
@@ -35,6 +39,8 @@ public class PlayerController : MonoBehaviour
         for (int i = 0; i < 0; i++) {
             CreateNewBodySegment();
         }
+
+        curMaxSpeed = maxSpeed;
     }
 
     // Update is called once per frame
@@ -69,8 +75,8 @@ public class PlayerController : MonoBehaviour
         );
         float horizSpeed = horizVel.magnitude;
 
-        if (horizSpeed > maxSpeed) {
-            float fixFactor = maxSpeed / horizSpeed;
+        if (horizSpeed > curMaxSpeed) {
+            float fixFactor = curMaxSpeed / horizSpeed;
 
             horizVel = new Vector3(
                 rb.velocity.x * fixFactor,
@@ -101,6 +107,24 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space)) {
             ShootBodySegment();
         }
+
+        if (hasBrakePowerup) {
+            if (Input.GetKey(KeyCode.LeftShift)) {
+                ApplyBrake();
+            }
+        }
+    }
+
+    void ApplyBrake() {
+        Vector3 horizVel = new Vector3(
+            rb.velocity.x,
+            0,
+            rb.velocity.z
+        );
+
+        Vector3 accel = -horizVel.normalized * brakeAccel * horizVel.magnitude;
+
+        rb.AddForce(accel, ForceMode.Acceleration);
     }
 
     void AddBodySegment(GameObject newSegment) {
