@@ -30,6 +30,9 @@ public class SnakeBodyController : MonoBehaviour
 
     private float deathHeight = -20.0f;
 
+    private float lastTimeWithinTargetRange;
+    private float timeAwayFromTargetBeforeCut = 5.0f;
+
 
     // Start is called before the first frame update
     void Start()
@@ -39,11 +42,14 @@ public class SnakeBodyController : MonoBehaviour
         audioSource.PlayOneShot(creationSound, 1.0f);
         meshRenderer = GetComponent<MeshRenderer>();
         playerController = GameObject.Find("Player").GetComponent<PlayerController>();
+        lastTimeWithinTargetRange = Time.time;
     }
 
     public void SetTarget(GameObject newTarget, bool weaponize = false) {
         if (newTarget != null) {
             GetComponent<MeshRenderer>().material = activeMaterial;
+            lastTimeWithinTargetRange = Time.time;
+
 
         } else {
             if (weaponize) {
@@ -94,21 +100,31 @@ public class SnakeBodyController : MonoBehaviour
         Vector3 displacement = target.transform.position - transform.position;
 
         if (displacement.magnitude > followDistance) {
-            float speedMult = displacement.magnitude / followDistance;
-
-            float speed = target.GetComponent<Rigidbody>().velocity.magnitude * speedMult;
-
-            if (speed > maxSpeed) {
-                speed = maxSpeed;
+            if (displacement.magnitude <= followDistance * 1.5f) {
+                lastTimeWithinTargetRange = Time.time;
             }
 
-            rb.velocity = new Vector3(
-                displacement.normalized.x * speed,
-                rb.velocity.y,
-                displacement.normalized.z * speed
-            );
+            if (Time.time - lastTimeWithinTargetRange > timeAwayFromTargetBeforeCut) {
+                playerController.CutAtSegment(gameObject);
+
+            } else {
+                float speedMult = displacement.magnitude / followDistance;
+
+                float speed = target.GetComponent<Rigidbody>().velocity.magnitude * speedMult;
+
+                if (speed > maxSpeed) {
+                    speed = maxSpeed;
+                }
+
+                rb.velocity = new Vector3(
+                    displacement.normalized.x * speed,
+                    rb.velocity.y,
+                    displacement.normalized.z * speed
+                );
+            }
 
         } else {
+            lastTimeWithinTargetRange = Time.time;
             rb.velocity *= 0.99f;
 
         }
