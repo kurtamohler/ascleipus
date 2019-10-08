@@ -100,34 +100,40 @@ public class SnakeBodyController : MonoBehaviour
         Vector3 displacement = target.transform.position - transform.position;
 
         if (displacement.magnitude > followDistance) {
-            if (displacement.magnitude <= followDistance * 1.5f) {
-                lastTimeWithinTargetRange = Time.time;
+            float speedMult = displacement.magnitude / followDistance;
+
+            float speed = target.GetComponent<Rigidbody>().velocity.magnitude * speedMult;
+
+            if (speed > maxSpeed) {
+                speed = maxSpeed;
             }
 
+            rb.velocity = new Vector3(
+                displacement.normalized.x * speed,
+                rb.velocity.y,
+                displacement.normalized.z * speed
+            );
+
+        } else {
+            rb.velocity *= 0.99f;
+
+        }
+
+        Vector3 horizDisplacement = new Vector3(
+            displacement.x,
+            0,
+            displacement.z
+        );
+
+        if (horizDisplacement.magnitude > followDistance * 1.5f) {
             if (Time.time - lastTimeWithinTargetRange > timeAwayFromTargetBeforeCut) {
                 playerController.CutAtSegment(gameObject);
-
-            } else {
-                float speedMult = displacement.magnitude / followDistance;
-
-                float speed = target.GetComponent<Rigidbody>().velocity.magnitude * speedMult;
-
-                if (speed > maxSpeed) {
-                    speed = maxSpeed;
-                }
-
-                rb.velocity = new Vector3(
-                    displacement.normalized.x * speed,
-                    rb.velocity.y,
-                    displacement.normalized.z * speed
-                );
             }
 
         } else {
             lastTimeWithinTargetRange = Time.time;
-            rb.velocity *= 0.99f;
-
         }
+
     }
 
     private void FollowTargetOld() {
