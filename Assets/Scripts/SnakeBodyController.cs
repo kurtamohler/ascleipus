@@ -31,7 +31,7 @@ public class SnakeBodyController : MonoBehaviour
     private float deathHeight = -20.0f;
 
     private float lastTimeWithinTargetRange;
-    private float timeAwayFromTargetBeforeCut = 5.0f;
+    private float timeAwayFromTargetBeforeCut = 0.5f;
 
 
     // Start is called before the first frame update
@@ -96,7 +96,172 @@ public class SnakeBodyController : MonoBehaviour
         }
     }
 
+    // Pros:
+    //      Very stable due to gravitation towards the follow distance. So if we are less than follow
+    //          distance, we drift away from target, which makes collisions unlikely.
+    //      Interesting flying effect.
+    //
+    // Cons:
+    //      Poor path preservation. It's like pulling on a string. This is because we aren't using
+    //          integrating on the target's speed.
+    //      It's impossible for the whole snake to fall into a hole because segments push themselves away
+    //          from each other.
+    //      Very small gravitational effect.
+    private void FollowTarget3D() {
+        // Vector3 horizDisplacement = new Vector3(
+        //     target.transform.position.x - transform.position.x,
+        //     0,
+        //     target.transform.position.z - transform.position.z
+        // );
+
+        Vector3 horizDisplacement = target.transform.position - transform.position;
+
+        bool isWithinFollowDist = horizDisplacement.magnitude <= followDistance;
+
+        Vector3 horizFollowDisplacement = (horizDisplacement - horizDisplacement.normalized * followDistance);
+        
+        float horizFollowDist = horizFollowDisplacement.magnitude;
+
+        float horizSpeed = (horizFollowDist <= 0.5f) ? (maxSpeed*horizFollowDist/0.5f): maxSpeed;
+        
+        Vector3 horizVelocity = horizFollowDisplacement.normalized * horizSpeed;
+
+        rb.velocity = horizVelocity;
+
+        // rb.velocity = new Vector3(
+        //     horizVelocity.x,
+        //     (rb.velocity.y+horizVelocity.y)*0.5f,
+        //     horizVelocity.z
+        // );
+    }
+
+    // Pros:
+    //      Very stable due to gravitation towards the follow distance. So if we are less than follow
+    //          distance, we drift away from target, which makes collisions unlikely.
+    //
+    // Cons:
+    //      Poor path preservation. It's like pulling on a string. This is because we aren't using
+    //          integrating on the target's speed.
+    //      It's impossible for the whole snake to fall into a hole because segments push themselves away
+    //          from each other on the horizontal plane.
+    private void FollowTarget2D() {
+        Vector3 horizDisplacement = new Vector3(
+            target.transform.position.x - transform.position.x,
+            0,
+            target.transform.position.z - transform.position.z
+        );
+
+        bool isWithinFollowDist = horizDisplacement.magnitude <= followDistance;
+
+        Vector3 horizFollowDisplacement = (horizDisplacement - horizDisplacement.normalized * followDistance);
+        
+        float horizFollowDist = horizFollowDisplacement.magnitude;
+
+        float horizSpeed = (horizFollowDist <= 0.5f) ? (maxSpeed*horizFollowDist/0.5f): maxSpeed;
+        
+        Vector3 horizVelocity = horizFollowDisplacement.normalized * horizSpeed;
+
+        rb.velocity = new Vector3(
+            horizVelocity.x,
+            rb.velocity.y,
+            horizVelocity.z
+        );
+    }
+
+    private void FollowTarget2DSpeedMatch() {
+        Vector3 horizDisplacement = new Vector3(
+            target.transform.position.x - transform.position.x,
+            0,
+            target.transform.position.z - transform.position.z
+        );
+
+        bool isWithinFollowDist = horizDisplacement.magnitude <= followDistance;
+
+        Vector3 horizFollowDisplacement = (horizDisplacement - horizDisplacement.normalized * followDistance);
+        
+        float horizFollowDist = horizFollowDisplacement.magnitude;
+
+        float horizSpeed = (horizFollowDist <= 0.5f) ?
+            (maxSpeed*horizFollowDist/0.5f):
+            (target.GetComponent<Rigidbody>().velocity.magnitude * horizDisplacement.magnitude / followDistance);
+
+            // float speedMult = displacement.magnitude / followDistance;
+
+            // float speed = target.GetComponent<Rigidbody>().velocity.magnitude * speedMult;
+
+        
+        Vector3 horizVelocity = horizFollowDisplacement.normalized * horizSpeed;
+
+        rb.velocity = new Vector3(
+            horizVelocity.x,
+            rb.velocity.y,
+            horizVelocity.z
+        );
+    }
+
+    void ApplyMaxSpeed() {
+        Vector3 horizVel = new Vector3(
+            rb.velocity.x,
+            0,
+            rb.velocity.z
+        );
+        float horizSpeed = horizVel.magnitude;
+
+        if (horizSpeed > maxSpeed) {
+            float fixFactor = maxSpeed / horizSpeed;
+
+            horizVel = new Vector3(
+                rb.velocity.x * fixFactor,
+                0,
+                rb.velocity.z * fixFactor
+            );
+
+            rb.velocity = new Vector3(
+                horizVel.x,
+                rb.velocity.y,
+                horizVel.z 
+            );
+        }
+
+        // curMoveDirection = horizVel.normalized;
+    }
+
+    private void FollowTargetVert() {
+        float dist = target.transform.position.y - transform.position.y;
+        float distMag = Mathf.Abs(dist);
+        float distDir = dist / distMag;
+
+        if (distMag > followDistance) {
+            transform.position = new Vector3(
+                transform.position.x,
+                transform.position.y + distDir * followDistance,
+                transform.position.z
+            );
+
+            rb.velocity = new Vector3(
+                rb.velocity.x,
+                0,
+                rb.velocity.z
+            );
+        }
+    }
+
     private void FollowTarget() {
+        FollowTargetOrigYCorrection();
+        // FollowTarget2D();
+        // FollowTargetVert();
+        // FollowTarget2DSpeedMatch();
+
+        // FollowTarget3D();
+        CutIfTooFar();
+    }
+
+    // Pros:
+    //      Relatively good at preserving the shape of the path
+    //
+    // Cons:
+    //      Instability due to collisions with target--need to slow down more quickly upon approach
+    private void FollowTargetOrigYCorrection() {
         Vector3 displacement = target.transform.position - transform.position;
 
         if (displacement.magnitude > followDistance) {
@@ -117,36 +282,51 @@ public class SnakeBodyController : MonoBehaviour
         } else {
             rb.velocity *= 0.99f;
 
+            // if (displacement.magnitude < followDistance || displacement.magnitude > 1.0f) {
+            //     float horizVelFactor = ((displacement.magnitude - 1.0f) / (followDistance-1.0f));
+
+            //     rb.velocity = new Vector3(
+            //         displacement.normalized.x * horizVelFactor,
+            //         rb.velocity.y,
+            //         displacement.normalized.z * horizVelFactor
+            //     );
+            // }
+
         }
 
-        Vector3 horizDisplacement = new Vector3(
-            displacement.x,
-            0,
-            displacement.z
-        );
+        float yDisp = target.transform.position.y - transform.position.y;
 
-        if (horizDisplacement.magnitude > followDistance * 1.5f) {
-            if (Time.time - lastTimeWithinTargetRange > timeAwayFromTargetBeforeCut) {
-                playerController.CutAtSegment(gameObject);
+        float yDispMag = Mathf.Abs(yDisp);
+        float yDispDir = yDisp / yDispMag;
+
+        if (yDispMag > 1.0f) {
+
+            float ySpeed = 10.0f * ((yDispMag > 2.0f) ? 1.0f : (yDispMag - 1.0f));
+
+            float curYSpeed = Mathf.Abs(rb.velocity.y);
+            float curYVelDir = rb.velocity.y / curYSpeed;
+
+            if ( ((curYVelDir * yDispDir) < 0.0f) || (curYSpeed < ySpeed)) {
+                float yVel = ySpeed * yDispDir;
+                rb.velocity = new Vector3(
+                    rb.velocity.x,
+                    yVel,
+                    rb.velocity.z
+                );
             }
-
-        } else {
-            lastTimeWithinTargetRange = Time.time;
         }
-
     }
 
-    private void FollowTargetOld() {
+    private void FollowTargetOrig() {
         Vector3 displacement = target.transform.position - transform.position;
 
         if (displacement.magnitude > followDistance) {
-            float speed = target.GetComponent<Rigidbody>().velocity.magnitude;
+            float speedMult = displacement.magnitude / followDistance;
+
+            float speed = target.GetComponent<Rigidbody>().velocity.magnitude * speedMult;
 
             if (speed > maxSpeed) {
                 speed = maxSpeed;
-
-            } else if (speed < minSpeed) {
-                speed = minSpeed;
             }
 
             rb.velocity = new Vector3(
@@ -157,7 +337,52 @@ public class SnakeBodyController : MonoBehaviour
 
         } else {
             rb.velocity *= 0.99f;
+
+            // if (displacement.magnitude < followDistance || displacement.magnitude > 1.0f) {
+            //     float horizVelFactor = ((displacement.magnitude - 1.0f) / (followDistance-1.0f));
+
+            //     rb.velocity = new Vector3(
+            //         displacement.normalized.x * horizVelFactor,
+            //         rb.velocity.y,
+            //         displacement.normalized.z * horizVelFactor
+            //     );
+            // }
+
         }
+    }
+
+    void CutIfTooFar() {
+        Vector3 displacement = target.transform.position - transform.position;
+        Vector3 horizDisplacement = new Vector3(
+            displacement.x,
+            0,
+            // displacement.y,
+            displacement.z
+        );
+
+        float horizDist = horizDisplacement.magnitude;
+        float vertDist = Mathf.Abs(displacement.y);
+
+        if ((horizDist >= 4.0f*followDistance) || (vertDist >= 5.0f*followDistance)) {
+            // playerController.CutAtSegment(gameObject);
+            if (Time.time - lastTimeWithinTargetRange > timeAwayFromTargetBeforeCut) {
+                playerController.CutAtSegment(gameObject);
+            }
+
+        } else {
+            lastTimeWithinTargetRange = Time.time;
+
+        }
+
+        // if (horizDisplacement.magnitude > followDistance * 1.5f) {
+        //     if (Time.time - lastTimeWithinTargetRange > timeAwayFromTargetBeforeCut) {
+        //         playerController.CutAtSegment(gameObject);
+        //     }
+
+        // } else {
+        //     lastTimeWithinTargetRange = Time.time;
+        // }
+
     }
 
     void OnTriggerEnter(Collider collider) {
