@@ -8,7 +8,8 @@ public class SnakeBodyController : MonoBehaviour
 
     private Rigidbody rb;
     public float followDistance = 2;
-    private float maxSpeed = 20;
+    // private float maxSpeed = 20;
+    private float maxSpeed = 17;
     private float minSpeed = 5f;
 
     private float followForce = 100;
@@ -50,6 +51,8 @@ public class SnakeBodyController : MonoBehaviour
             GetComponent<MeshRenderer>().material = activeMaterial;
             lastTimeWithinTargetRange = Time.time;
             prevTargetFilterPos = newTarget.transform.position;
+
+            // maxSpeed = playerController.maxSpeed * 2.0f;
 
 
         } else {
