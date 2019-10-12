@@ -138,7 +138,7 @@ public class PlayerController : MonoBehaviour
         SnakeBodyController newSegmentController = newSegment.GetComponent<SnakeBodyController>();
 
         newSegmentController.SetTarget(target);
-        newSegmentController.followDistance = 1.3f;
+        newSegmentController.followDistance = 1.0f;
 
         newSegment.transform.position = position;
 

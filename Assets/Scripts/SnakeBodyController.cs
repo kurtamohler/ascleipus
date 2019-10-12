@@ -49,6 +49,7 @@ public class SnakeBodyController : MonoBehaviour
         if (newTarget != null) {
             GetComponent<MeshRenderer>().material = activeMaterial;
             lastTimeWithinTargetRange = Time.time;
+            prevTargetFilterPos = newTarget.transform.position;
 
 
         } else {
@@ -247,7 +248,7 @@ public class SnakeBodyController : MonoBehaviour
     }
 
     private void FollowTarget() {
-        FollowTargetOrigYCorrection();
+        FollowTargetYCorrection();
         // FollowTarget2D();
         // FollowTargetVert();
         // FollowTarget2DSpeedMatch();
@@ -256,13 +257,35 @@ public class SnakeBodyController : MonoBehaviour
         CutIfTooFar();
     }
 
+
+
+
+    private float FirstOrderLag(float val, float prevFilterVal, float k) {
+        return (k*val) + (1.0f-k)*prevFilterVal;
+    }
+    private Vector3 FirstOrderLag3D(Vector3 vector, Vector3 prevFilterVector, float k) {
+        Vector3 filterVector = new Vector3(
+            FirstOrderLag(vector.x, prevFilterVector.x, k),
+            FirstOrderLag(vector.y, prevFilterVector.y, k),
+            FirstOrderLag(vector.z, prevFilterVector.z, k)
+        );
+
+        return filterVector;
+    }
+
+
+
+    private Vector3 prevTargetFilterPos;
+
     // Pros:
     //      Relatively good at preserving the shape of the path
     //
     // Cons:
     //      Instability due to collisions with target--need to slow down more quickly upon approach
-    private void FollowTargetOrigYCorrection() {
-        Vector3 displacement = target.transform.position - transform.position;
+    private void FollowTargetYCorrection() {
+        prevTargetFilterPos = FirstOrderLag3D(target.transform.position, prevTargetFilterPos, 0.4f);
+
+        Vector3 displacement = prevTargetFilterPos - transform.position;
 
         if (displacement.magnitude > followDistance) {
             float speedMult = displacement.magnitude / followDistance;
@@ -294,7 +317,7 @@ public class SnakeBodyController : MonoBehaviour
 
         }
 
-        float yDisp = target.transform.position.y - transform.position.y;
+        float yDisp = displacement.y;
 
         float yDispMag = Mathf.Abs(yDisp);
         float yDispDir = yDisp / yDispMag;
@@ -363,7 +386,7 @@ public class SnakeBodyController : MonoBehaviour
         float horizDist = horizDisplacement.magnitude;
         float vertDist = Mathf.Abs(displacement.y);
 
-        if ((horizDist >= 4.0f*followDistance) || (vertDist >= 5.0f*followDistance)) {
+        if ((horizDist >= 6.0f) /*|| (vertDist >= 10.0f)*/) {
             // playerController.CutAtSegment(gameObject);
             if (Time.time - lastTimeWithinTargetRange > timeAwayFromTargetBeforeCut) {
                 playerController.CutAtSegment(gameObject);
