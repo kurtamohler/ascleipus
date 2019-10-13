@@ -47,4 +47,8 @@ public class ButtonController : MonoBehaviour
     public bool IsPressed() {
         return pressedCount > 0;
     }
+
+    public void SetPermanent(bool permanent) {
+        isPermanent = permanent;
+    }
 }

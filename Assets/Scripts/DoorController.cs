@@ -7,6 +7,7 @@ public class DoorController : MonoBehaviour
     [SerializeField] private List<GameObject> buttons;
     [SerializeField] private Vector3 openOffset;
     [SerializeField] private float speed;
+    [SerializeField] private bool makeButtonsPermanent;
 
     private float acceptableDistance = 0.001f;
 
@@ -41,6 +42,13 @@ public class DoorController : MonoBehaviour
         }
 
         open = allButtonsPressed;
+
+        if (allButtonsPressed && makeButtonsPermanent) {
+            foreach (GameObject button in buttons) {
+                button.GetComponent<ButtonController>().SetPermanent(true);
+            }
+
+        }
     }
 
     void UpdatePosition() {
