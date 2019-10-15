@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
 
     public GameObject jumpBarPrefab;
 
+    private SegmentCounterController segmentCounterController;
     private float curMaxSpeed;
 
     private Rigidbody rb;
@@ -43,6 +44,8 @@ public class PlayerController : MonoBehaviour
         }
 
         curMaxSpeed = maxSpeed;
+
+        segmentCounterController = GameObject.Find("SegmentCounter").GetComponent<SegmentCounterController>();
     }
 
     // Update is called once per frame
@@ -153,6 +156,7 @@ public class PlayerController : MonoBehaviour
         }
 
         bodySegments.AddFirst(newSegment);
+        segmentCounterController.UpdateCount(bodySegments.Count);
     }
 
     void CreateNewBodySegment() {
@@ -255,6 +259,8 @@ public class PlayerController : MonoBehaviour
 
             curNode = nextNode;
         }
+
+        segmentCounterController.UpdateCount(bodySegments.Count);
     }
 
     void Jump() {
