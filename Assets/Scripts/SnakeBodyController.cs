@@ -8,6 +8,8 @@ public class SnakeBodyController : MonoBehaviour
 
     private Rigidbody rb;
     public float followDistance = 2;
+
+
     // private float maxSpeed = 20;
     private float maxSpeed = 17;
     private float minSpeed = 5f;

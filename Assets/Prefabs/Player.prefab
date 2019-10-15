@@ -87,6 +87,8 @@ MonoBehaviour:
   speed: 10000
   maxSpeed: 10
   brakeAccel: 10
+  jumpBarPrefab: {fileID: 1472977731561119799, guid: 5ed343034e4ca3a59a45a53d4d69f011,
+    type: 3}
   snakeBodyPrefab: {fileID: 6338043044793817928, guid: c18f262c62545cf85ad8c0d7bc0c2260,
     type: 3}
 --- !u!1 &6585308217732786024

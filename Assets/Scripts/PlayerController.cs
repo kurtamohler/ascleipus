@@ -9,6 +9,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float maxSpeed;
     [SerializeField] private float brakeAccel;
 
+    public GameObject jumpBarPrefab;
+
     private float curMaxSpeed;
 
     private Rigidbody rb;
@@ -105,7 +107,9 @@ public class PlayerController : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.Space)) {
-            ShootBodySegment();
+            // ShootBodySegment();
+            // Jump();
+            DropJumpBar();
         }
 
         if (hasBrakePowerup) {
@@ -249,5 +253,13 @@ public class PlayerController : MonoBehaviour
 
             curNode = nextNode;
         }
+    }
+
+    void Jump() {
+        rb.AddForce(Vector3.up*200, ForceMode.Impulse);
+    }
+
+    void DropJumpBar() {
+        Instantiate(jumpBarPrefab, transform.position - Vector3.up*0.5f, Quaternion.identity);
     }
 }
