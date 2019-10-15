@@ -102,6 +102,7 @@ public class PlayerController : MonoBehaviour
             Die();
         }
 
+        /*
         if (Input.GetKeyDown(KeyCode.C)) {
             CreateNewBodySegment();
         }
@@ -111,6 +112,7 @@ public class PlayerController : MonoBehaviour
             // Jump();
             DropJumpBar();
         }
+        */
 
         if (hasBrakePowerup) {
             if (Input.GetKey(KeyCode.LeftShift)) {
