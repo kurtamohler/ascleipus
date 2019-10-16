@@ -328,8 +328,8 @@ public class SnakeBodyController : MonoBehaviour
         float yDispDir = yDisp / yDispMag;
 
         if (yDispMag > 1.0f) {
-
-            float ySpeed = 10.0f * ((yDispMag > 2.0f) ? 1.0f : (yDispMag - 1.0f));
+            float targetSpeedY = Mathf.Abs(target.GetComponent<Rigidbody>().velocity.y);
+            float ySpeed = targetSpeedY * 1.1f * ((yDispMag > 2.0f) ? 1.0f : (yDispMag - 1.0f));
 
             float curYSpeed = Mathf.Abs(rb.velocity.y);
             float curYVelDir = rb.velocity.y / curYSpeed;
