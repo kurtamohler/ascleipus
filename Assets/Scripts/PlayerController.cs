@@ -31,9 +31,12 @@ public class PlayerController : MonoBehaviour
 
     float deathHeight = -20.0f;
 
+    bool isActive;
+
     // Start is called before the first frame update
     void Start()
     {
+        isActive = true;
         curMoveDirection = new Vector3(1,0,0);
         rb = GetComponent<Rigidbody>();
 
@@ -51,25 +54,27 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        float vertInput = Input.GetAxis("Vertical");
-        float horizInput = Input.GetAxis("Horizontal");
+        if (isActive) {
+            float vertInput = Input.GetAxis("Vertical");
+            float horizInput = Input.GetAxis("Horizontal");
 
-        if (vertInput != 0 || horizInput != 0) {
-            float vertForce = vertInput * Time.deltaTime * speed;
-            float horizForce = horizInput * Time.deltaTime * speed;
+            if (vertInput != 0 || horizInput != 0) {
+                float vertForce = vertInput * Time.deltaTime * speed;
+                float horizForce = horizInput * Time.deltaTime * speed;
 
-            Vector3 force = new Vector3(
-                horizForce,
-                0,
-                vertForce
-            );
+                Vector3 force = new Vector3(
+                    horizForce,
+                    0,
+                    vertForce
+                );
 
-            force *= rb.mass;
+                force *= rb.mass;
 
-            rb.AddForce(force);
+                rb.AddForce(force);
+            }
+
+            ApplyMaxSpeed();
         }
-
-        ApplyMaxSpeed();
     }
 
     void ApplyMaxSpeed() {
@@ -101,27 +106,37 @@ public class PlayerController : MonoBehaviour
 
 
     void Update() {
-        if (transform.position.y < deathHeight) {
-            Die();
-        }
+        if (isActive) {
+            if (transform.position.y < deathHeight) {
+                Die();
+            }
 
-        /*
-        if (Input.GetKeyDown(KeyCode.C)) {
-            CreateNewBodySegment();
-        }
+            /*
+            if (Input.GetKeyDown(KeyCode.C)) {
+                CreateNewBodySegment();
+            }
 
-        if (Input.GetKeyDown(KeyCode.Space)) {
-            // ShootBodySegment();
-            // Jump();
-            DropJumpBar();
-        }
-        */
+            if (Input.GetKeyDown(KeyCode.Space)) {
+                // ShootBodySegment();
+                // Jump();
+                DropJumpBar();
+            }
+            */
 
-        if (hasBrakePowerup) {
-            if (Input.GetKey(KeyCode.LeftShift)) {
-                ApplyBrake();
+            if (hasBrakePowerup) {
+                if (Input.GetKey(KeyCode.LeftShift)) {
+                    ApplyBrake();
+                }
             }
         }
+    }
+
+    public bool IsActive() {
+        return isActive;
+    }
+
+    public void SetActive(bool active) {
+        isActive = active;
     }
 
     void ApplyBrake() {

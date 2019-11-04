@@ -6,10 +6,12 @@ public class PauseController : MonoBehaviour
 {
     private bool paused;
     private GameObject pauseMenuContent;
+    private PlayerController playerController;
 
     // Start is called before the first frame update
     void Start()
     {
+        playerController = GameObject.Find("Player").GetComponent<PlayerController>();
         pauseMenuContent = gameObject.transform.GetChild(0).gameObject;
         paused = pauseMenuContent.active;
         UpdatePausedState();
@@ -18,7 +20,7 @@ public class PauseController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.P)) {
+        if (playerController.IsActive() && (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.P))) {
             paused = !paused;
             UpdatePausedState();
         }
@@ -33,5 +35,10 @@ public class PauseController : MonoBehaviour
         } else {
             Time.timeScale = 1;
         }
+    }
+
+    public void SetPausedState(bool state) {
+        paused = state;
+        UpdatePausedState();
     }
 }
