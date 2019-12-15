@@ -33,6 +33,10 @@ public class PlayerController : MonoBehaviour
 
     bool isActive;
 
+    public GameObject spikes;
+
+    BodySpikesController spikesController;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -49,6 +53,9 @@ public class PlayerController : MonoBehaviour
         curMaxSpeed = maxSpeed;
 
         segmentCounterController = GameObject.Find("SegmentCounter").GetComponent<SegmentCounterController>();
+
+        spikes.SetActive(false);
+        spikesController = spikes.GetComponent<BodySpikesController>();
     }
 
     // Update is called once per frame
@@ -115,13 +122,17 @@ public class PlayerController : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.C)) {
                 CreateNewBodySegment();
             }
+            */
 
             if (Input.GetKeyDown(KeyCode.Space)) {
                 // ShootBodySegment();
                 // Jump();
-                DropJumpBar();
+                // DropJumpBar();
+                if (!spikes.activeInHierarchy) {
+                    spikes.SetActive(true);
+                    spikesController.StartExtending();
+                }
             }
-            */
 
             if (hasBrakePowerup) {
                 if (Input.GetKey(KeyCode.LeftShift)) {
