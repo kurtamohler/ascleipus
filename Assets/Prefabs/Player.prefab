@@ -1,19 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &522434106564204977
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1860695286}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2edf1359d3e209a2d876bc6fbb731bfd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  extendSize: 3.33
-  extendRate: 5
 --- !u!1 &6017079590730469631
 GameObject:
   m_ObjectHideFlags: 0
@@ -27,6 +13,7 @@ GameObject:
   - component: {fileID: 6017079590730469629}
   - component: {fileID: 6017079590730469630}
   - component: {fileID: 6017079590730469505}
+  - component: {fileID: -4276401968149884904}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -106,7 +93,22 @@ MonoBehaviour:
     type: 3}
   snakeBodyPrefab: {fileID: 6338043044793817928, guid: c18f262c62545cf85ad8c0d7bc0c2260,
     type: 3}
+--- !u!114 &-4276401968149884904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6017079590730469631}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2edf1359d3e209a2d876bc6fbb731bfd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   spikes: {fileID: 1860695286}
+  extendSize: 3.33
+  extendRate: 8
+  pauseTime: 0.5
 --- !u!1 &6585308217732786024
 GameObject:
   m_ObjectHideFlags: 0

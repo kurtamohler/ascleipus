@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BodySpikesController : MonoBehaviour
 {
+    public GameObject spikes;
     public float extendSize;
     public float extendRate;
     public float pauseTime;
@@ -25,7 +26,7 @@ public class BodySpikesController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        origScale = gameObject.transform.localScale;
+        origScale = spikes.transform.localScale;
         origScaleMag = origScale.magnitude;
         curScaleMag = origScaleMag;
         targetScale = origScale * extendSize;
@@ -33,6 +34,7 @@ public class BodySpikesController : MonoBehaviour
 
         extendMult = 1.0f + extendRate;
         contractMult = 1.0f / extendMult;
+        spikes.SetActive(false);
     }
 
     // Update is called once per frame
@@ -50,12 +52,12 @@ public class BodySpikesController : MonoBehaviour
         // float mult = extendMult * Time.deltaTime;
         float mult = 1.0f + (Time.deltaTime * extendRate);
 
-        transform.localScale *= mult;
+        spikes.transform.localScale *= mult;
         curScaleMag *= mult;
 
         if (curScaleMag >= targetScaleMag) {
             // Since we may have overshot the target, reset to equal the target
-            transform.localScale = targetScale;
+            spikes.transform.localScale = targetScale;
             curScaleMag = targetScaleMag;
 
             isContracting = true;
@@ -71,20 +73,25 @@ public class BodySpikesController : MonoBehaviour
         } else {
             float mult = 1.0f / (1.0f + (Time.deltaTime * extendRate));
 
-            transform.localScale *= mult;
+            spikes.transform.localScale *= mult;
             curScaleMag *= mult;
 
             if (curScaleMag <= origScaleMag) {
-                transform.localScale = origScale;
+                spikes.transform.localScale = origScale;
                 isContracting = false;
                 isExtending = false;
-                gameObject.SetActive(false);
+                spikes.SetActive(false);
             }
         }
     }
 
     public void StartExtending() {
+        spikes.SetActive(true);
         isExtending = true;
         isContracting = false;
+    }
+
+    public bool IsExtended() {
+        return isContracting || isExtending;
     }
 }

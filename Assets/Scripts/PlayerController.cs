@@ -33,8 +33,6 @@ public class PlayerController : MonoBehaviour
 
     bool isActive;
 
-    public GameObject spikes;
-
     BodySpikesController spikesController;
 
     // Start is called before the first frame update
@@ -54,8 +52,7 @@ public class PlayerController : MonoBehaviour
 
         segmentCounterController = GameObject.Find("SegmentCounter").GetComponent<SegmentCounterController>();
 
-        spikes.SetActive(false);
-        spikesController = spikes.GetComponent<BodySpikesController>();
+        spikesController = gameObject.GetComponent<BodySpikesController>();
     }
 
     // Update is called once per frame
@@ -128,9 +125,16 @@ public class PlayerController : MonoBehaviour
                 // ShootBodySegment();
                 // Jump();
                 // DropJumpBar();
-                if (!spikes.activeInHierarchy) {
-                    spikes.SetActive(true);
+                if (!spikesController.IsExtended()) {
+                    //spikes.SetActive(true);
                     spikesController.StartExtending();
+
+                    
+
+                    foreach (GameObject bodySegment in bodySegments) {
+                        bodySegment.GetComponent<BodySpikesController>().StartExtending();
+                        //bodySegment.GetComponent<BodySpikesController>().SetActive(true);
+                    }
                 }
             }
 
