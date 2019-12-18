@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2546637199342656906}
   m_Layer: 0
   m_Name: SnakeBodySpikes
-  m_TagString: enemy
+  m_TagString: SnakeBodySpikes
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

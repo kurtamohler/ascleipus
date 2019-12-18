@@ -8,6 +8,9 @@ TagManager:
   - FoodPickup
   - EnemyWeapon
   - Enemy
+  - enemy
+  - SnakeBodySpikes
+  - SpikeBounceSurface
   layers:
   - Default
   - TransparentFX

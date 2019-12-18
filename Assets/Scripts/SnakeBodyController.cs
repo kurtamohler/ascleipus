@@ -422,18 +422,24 @@ public class SnakeBodyController : MonoBehaviour
     }
 
     void OnCollisionEnter(Collision collision) {
+        GameObject collisionObject = collision.gameObject;
         if (weaponized) {
-            if (collision.gameObject.CompareTag("SnakeBody")) {
+            if (collisionObject.CompareTag("SnakeBody")) {
 
-                SnakeBodyController otherSnakeBodyController = collision.gameObject.GetComponent<SnakeBodyController>();
+                SnakeBodyController otherSnakeBodyController = collisionObject.GetComponent<SnakeBodyController>();
 
                 if (otherSnakeBodyController.HasTarget()) {
-                    playerController.CutAtSegment(collision.gameObject);
+                    playerController.CutAtSegment(collisionObject);
                 }
 
-            } else if (collision.gameObject.CompareTag("Enemy")) {
-                Destroy(collision.gameObject);
-
+            } else if (collisionObject.CompareTag("Enemy")) {
+                Destroy(collisionObject);
+            }
+        } else {
+            if (collisionObject.CompareTag("SpikeBounceSurface")) {
+                if (target) {
+                    playerController.CutAtSegment(gameObject);
+                }
             }
         }
     }

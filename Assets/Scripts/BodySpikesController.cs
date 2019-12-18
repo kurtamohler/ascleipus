@@ -107,4 +107,5 @@ public class BodySpikesController : MonoBehaviour
     public bool IsExtended() {
         return isContracting || isExtending;
     }
+
 }
