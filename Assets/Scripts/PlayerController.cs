@@ -127,14 +127,22 @@ public class PlayerController : MonoBehaviour
                 // DropJumpBar();
                 if (!spikesController.IsExtended()) {
                     //spikes.SetActive(true);
-                    spikesController.StartExtending();
+
+                    if (bodySegments.Count > 0) {
+                        LinkedListNode<GameObject> nextBodySegmentNode = bodySegments.First;
+                        spikesController.StartExtending(nextBodySegmentNode);
+                    } else {
+                        spikesController.StartExtending();
+
+                    }
 
                     
-
+                    /*
                     foreach (GameObject bodySegment in bodySegments) {
                         bodySegment.GetComponent<BodySpikesController>().StartExtending();
                         //bodySegment.GetComponent<BodySpikesController>().SetActive(true);
                     }
+                    */
                 }
             }
 

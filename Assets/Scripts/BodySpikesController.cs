@@ -6,8 +6,8 @@ public class BodySpikesController : MonoBehaviour
 {
     public GameObject spikes;
     public float extendSize;
-    public float extendRate;
-    public float pauseTime;
+    float extendRate = 16f;
+    float pauseTime = 0.5f;
 
     Vector3 origScale;
     Vector3 targetScale;
@@ -22,6 +22,8 @@ public class BodySpikesController : MonoBehaviour
     bool isContracting = false;
 
     float pauseCounter = 0;
+
+    LinkedListNode<GameObject> nextBodySegmentNode = null;
 
     // Start is called before the first frame update
     void Start()
@@ -56,6 +58,7 @@ public class BodySpikesController : MonoBehaviour
         curScaleMag *= mult;
 
         if (curScaleMag >= targetScaleMag) {
+            ExtendNextSegment();
             // Since we may have overshot the target, reset to equal the target
             spikes.transform.localScale = targetScale;
             curScaleMag = targetScaleMag;
@@ -71,6 +74,7 @@ public class BodySpikesController : MonoBehaviour
         if (pauseCounter > 0.0f) {
             pauseCounter -= Time.deltaTime;
         } else {
+
             float mult = 1.0f / (1.0f + (Time.deltaTime * extendRate));
 
             spikes.transform.localScale *= mult;
@@ -85,7 +89,16 @@ public class BodySpikesController : MonoBehaviour
         }
     }
 
-    public void StartExtending() {
+    void ExtendNextSegment() {
+        if (nextBodySegmentNode != null) {
+            LinkedListNode<GameObject> nextNextBodySegmentNode = nextBodySegmentNode.Next;
+
+            nextBodySegmentNode.Value.GetComponent<BodySpikesController>().StartExtending(nextNextBodySegmentNode);
+        }
+    }
+
+    public void StartExtending(LinkedListNode<GameObject> nextSpikeControllerNode = null) {
+        this.nextBodySegmentNode = nextSpikeControllerNode;
         spikes.SetActive(true);
         isExtending = true;
         isContracting = false;
