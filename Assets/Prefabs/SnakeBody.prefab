@@ -126,7 +126,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
-  followDistance: 2
+  followDistance: 4
   creationSound: {fileID: 8300000, guid: fa7ecab5f254d466d9d0d52f78b96b9e, type: 3}
   activeMaterial: {fileID: 2100000, guid: ecb01b1b3f068009faf82325b28cd820, type: 2}
   deactiveMaterial: {fileID: 2100000, guid: 930be4e6836be9cdab29b1833c122061, type: 2}
@@ -241,8 +241,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spikes: {fileID: 7079493638062994841}
   extendSize: 3.33
-  extendRate: 8
-  pauseTime: 0.5
 --- !u!1001 &7079493638062895929
 PrefabInstance:
   m_ObjectHideFlags: 0

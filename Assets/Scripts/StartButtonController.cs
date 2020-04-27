@@ -7,6 +7,7 @@ using UnityEngine;
 public class StartButtonController : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public GameObject sceneLight;
+    public string sceneToLoad;
 
     // Start is called before the first frame update
     void Start()
@@ -32,6 +33,6 @@ public class StartButtonController : MonoBehaviour, IPointerEnterHandler, IPoint
     }
 
     public void LoadFirstLevel() {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Level1");
+        UnityEngine.SceneManagement.SceneManager.LoadScene(sceneToLoad);
     }
 }

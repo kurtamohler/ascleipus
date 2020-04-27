@@ -8,6 +8,8 @@ public class PauseController : MonoBehaviour
     private GameObject pauseMenuContent;
     private PlayerController playerController;
 
+    public List<GameObject> objectsToShowWhenPaused;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -32,13 +34,23 @@ public class PauseController : MonoBehaviour
 
         if (paused) {
             Time.timeScale = 0;
+            foreach (GameObject gameObject in objectsToShowWhenPaused) {
+                gameObject.SetActive(true);
+            }
         } else {
             Time.timeScale = 1;
+            foreach (GameObject gameObject in objectsToShowWhenPaused) {
+                gameObject.SetActive(false);
+            }
         }
     }
 
     public void SetPausedState(bool state) {
         paused = state;
         UpdatePausedState();
+    }
+
+    public bool IsPaused() {
+        return paused;
     }
 }

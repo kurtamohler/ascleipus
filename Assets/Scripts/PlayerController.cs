@@ -239,8 +239,9 @@ public class PlayerController : MonoBehaviour
     
     void OnTriggerEnter(Collider collider) {
         if (collider.CompareTag("FoodPickup")) {
+            collider.gameObject.SetActive(false);
+            //Destroy(collider.gameObject);
             CreateNewBodySegment();
-            Destroy(collider.gameObject);
         } else if (collider.CompareTag("EnemyWeapon")) {
             Die();
         }

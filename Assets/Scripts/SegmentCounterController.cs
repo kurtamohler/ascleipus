@@ -6,11 +6,15 @@ using TMPro;
 public class SegmentCounterController : MonoBehaviour
 {
     private int count;
+    private int totalPickups;
     private TextMeshProUGUI text;
+
 
     // Start is called before the first frame update
     void Start()
     {
+        //totalPickups = GameObject.FindWithTag("FoodPickup").;
+        totalPickups = GameObject.FindGameObjectsWithTag("FoodPickup").Length;
         text = GetComponent<TextMeshProUGUI>();
         UpdateCount(0);
     }
@@ -27,6 +31,6 @@ public class SegmentCounterController : MonoBehaviour
     }
 
     private void UpdateText() {
-        text.SetText("length: " + count);
+        text.SetText("length: " + count + " / " + totalPickups);
     }
 }

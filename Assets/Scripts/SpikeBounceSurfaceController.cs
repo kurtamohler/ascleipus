@@ -22,20 +22,20 @@ public class SpikeBounceSurfaceController : MonoBehaviour
         }
     }
 
-    void ApplyBounceToRigidBody(Rigidbody rb, Vector3 direction) {
+    void ApplyBounceToRigidBody(Rigidbody rb) {
         Vector3 newVelocity = rb.velocity;
-        newVelocity.y = 0;
+        newVelocity.y = 8.0f;
         rb.velocity = newVelocity;
 
-        Vector3 force = direction * 200.0f;
+        // Vector3 force = direction * 200.0f;
         
-        Debug.Log("Applying force: " + force);
-        rb.AddForce(force, ForceMode.Impulse);
+        // Debug.Log("Applying force: " + force);
+        // rb.AddForce(force, ForceMode.Impulse);
     }
 
     void OnTriggerEnter(Collider collider) {
         if (collider.CompareTag("SnakeBodySpikes")) {
-            ApplyBounceToRigidBody(collider.GetComponentInParent<Rigidbody>(), Vector3.up);
+            ApplyBounceToRigidBody(collider.GetComponentInParent<Rigidbody>());
         }
     }
 }

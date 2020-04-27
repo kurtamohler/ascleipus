@@ -291,6 +291,8 @@ public class SnakeBodyController : MonoBehaviour
         prevTargetFilterPos = FirstOrderLag3D(target.transform.position, prevTargetFilterPos, 0.4f);
 
         Vector3 displacement = prevTargetFilterPos - transform.position;
+        Vector3 horizDisplacement = displacement;
+        horizDisplacement.y = 0.0f;
 
         if (displacement.magnitude > followDistance) {
             float speedMult = displacement.magnitude / followDistance;
@@ -327,7 +329,7 @@ public class SnakeBodyController : MonoBehaviour
         float yDispMag = Mathf.Abs(yDisp);
         float yDispDir = yDisp / yDispMag;
 
-        if (yDispMag > 1.0f) {
+        if (yDispMag > followDistance) {
             float targetSpeedY = Mathf.Abs(target.GetComponent<Rigidbody>().velocity.y);
             float ySpeed = targetSpeedY * 1.1f * ((yDispMag > 2.0f) ? 1.0f : (yDispMag - 1.0f));
 
@@ -435,12 +437,12 @@ public class SnakeBodyController : MonoBehaviour
             } else if (collisionObject.CompareTag("Enemy")) {
                 Destroy(collisionObject);
             }
-        } else {
-            if (collisionObject.CompareTag("SpikeBounceSurface")) {
-                if (target) {
-                    playerController.CutAtSegment(gameObject);
-                }
-            }
+        // } else {
+        //     if (collisionObject.CompareTag("SpikeBounceSurface")) {
+        //         if (target) {
+        //             playerController.CutAtSegment(gameObject);
+        //         }
+        //     }
         }
     }
 }

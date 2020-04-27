@@ -23,6 +23,10 @@ public class BodySpikesController : MonoBehaviour
 
     float pauseCounter = 0;
 
+    float extendNextTime = 0;
+    bool watchForNextExtend = false;
+    float extendNextDelay = 0.10f;
+
     LinkedListNode<GameObject> nextBodySegmentNode = null;
 
     // Start is called before the first frame update
@@ -48,6 +52,22 @@ public class BodySpikesController : MonoBehaviour
             Contract();
         }
         
+        /*
+        if (extendNextCounter > 0) {
+            extendNextCounter -= Time.deltaTime;
+            if (extendNextCounter <= 0) {
+                ExtendNextSegment();
+            }
+        }   
+        */
+        
+        if (watchForNextExtend) {
+            if (Time.time >= extendNextTime) {
+                ExtendNextSegment(extendNextTime+extendNextDelay);
+                watchForNextExtend = false;
+            }
+        }
+        
     }
 
     void Extend() {
@@ -58,7 +78,7 @@ public class BodySpikesController : MonoBehaviour
         curScaleMag *= mult;
 
         if (curScaleMag >= targetScaleMag) {
-            ExtendNextSegment();
+            //ExtendNextSegment();
             // Since we may have overshot the target, reset to equal the target
             spikes.transform.localScale = targetScale;
             curScaleMag = targetScaleMag;
@@ -89,7 +109,7 @@ public class BodySpikesController : MonoBehaviour
         }
     }
 
-    void ExtendNextSegment() {
+    void ExtendNextSegment(float extendNextTime) {
         if (nextBodySegmentNode != null) {
             LinkedListNode<GameObject> nextNextBodySegmentNode = nextBodySegmentNode.Next;
 
@@ -97,11 +117,22 @@ public class BodySpikesController : MonoBehaviour
         }
     }
 
-    public void StartExtending(LinkedListNode<GameObject> nextSpikeControllerNode = null) {
+    public void StartExtending(LinkedListNode<GameObject> nextSpikeControllerNode = null, float extendNextTime = 0) {
+        // extendNextCounter = 0.15f;
         this.nextBodySegmentNode = nextSpikeControllerNode;
         spikes.SetActive(true);
         isExtending = true;
         isContracting = false;
+
+        if (nextBodySegmentNode != null) {
+            if (extendNextTime == 0) {
+                this.extendNextTime = Time.time + extendNextDelay;
+            } else {
+                this.extendNextTime = extendNextTime;
+            }
+            this.watchForNextExtend = true;
+        }
+
     }
 
     public bool IsExtended() {
